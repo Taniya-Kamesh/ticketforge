@@ -1,0 +1,40 @@
+CREATE DATABASE IF NOT EXISTS ticketforge;
+USE ticketforge;
+
+CREATE TABLE users(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(150) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    password_hash VARCHAR(150) NOT NULL,
+    role enum('USER','ADMIN') NOT NULL DEFAULT 'USER',
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE events(
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  title VARCHAR(100) NOT NULL,
+  venue VARCHAR(100) NOT NULL,
+  start_at DATETIME NOT NULL
+);
+
+CREATE TABLE seats(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    event_id BIGINT NOT NULL,
+    seat_label VARCHAR(50) NOT NULL,
+    status ENUM('AVAILABLE','HOLD','BOOKED') NOT NULL DEFAULT 'AVAILABLE',
+    held_by  BIGINT NULL,
+    hold_expires_at DATETIME NULL,
+    UNIQUE(event_id,seat_label),
+    FOREIGN KEY (event_id) REFERNCES events(id),
+    FOREIGN KEY (held_by) REFERENCES users(id);
+);
+
+
+CREATE TABLE bookings(
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    user_id BIGINT NOT NULL,
+    seat_id BIGINT NOT NULL UNIQUE,
+    booked at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY(user_id) REFERENCES users(id),
+    FOREIGN KEY(seat_id) REFERENCES seats(id)
+);
