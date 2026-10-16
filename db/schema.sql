@@ -14,7 +14,7 @@ CREATE TABLE events(
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
   title VARCHAR(100) NOT NULL,
   venue VARCHAR(100) NOT NULL,
-  start_at DATETIME NOT NULL
+  starts_at DATETIME NOT NULL
 );
 
 CREATE TABLE seats(
@@ -25,8 +25,8 @@ CREATE TABLE seats(
     held_by  BIGINT NULL,
     hold_expires_at DATETIME NULL,
     UNIQUE(event_id,seat_label),
-    FOREIGN KEY (event_id) REFERNCES events(id),
-    FOREIGN KEY (held_by) REFERENCES users(id);
+    FOREIGN KEY (event_id) REFERENCES events(id),
+    FOREIGN KEY (held_by) REFERENCES users(id)
 );
 
 
@@ -34,7 +34,7 @@ CREATE TABLE bookings(
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     user_id BIGINT NOT NULL,
     seat_id BIGINT NOT NULL UNIQUE,
-    booked at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    booked_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY(user_id) REFERENCES users(id),
     FOREIGN KEY(seat_id) REFERENCES seats(id)
 );
