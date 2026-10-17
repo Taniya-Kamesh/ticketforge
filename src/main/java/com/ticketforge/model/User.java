@@ -2,7 +2,7 @@ package com.ticketforge.model;
 
 import java.time.LocalDateTime;
 
-public class USER {
+public class User {
     private long id;
     private String name;
     private String email;
