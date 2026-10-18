@@ -4,10 +4,10 @@ import java.time.LocalDateTime;
 
 public class Seat {
     private long id;
-    private long event_id;
-    private String seat_label;
+    private long eventId;
+    private String seatLabel;
     private SeatStatus status;
-    private Long held_by;
+    private Long heldBy;
     private LocalDateTime holdExpiresAt;
 
     public long getId() {
@@ -18,20 +18,20 @@ public class Seat {
         this.id = id;
     }
 
-    public long getEvent_id() {
-        return event_id;
+    public long getEventId() {
+        return eventId;
     }
 
-    public void setEvent_id(long event_id) {
-        this.event_id = event_id;
+    public void setEventId(long eventId) {
+        this.eventId = eventId;
     }
 
-    public String getSeat_label() {
-        return seat_label;
+    public String getSeatLabel() {
+        return seatLabel;
     }
 
-    public void setSeat_label(String seat_label) {
-        this.seat_label = seat_label;
+    public void setSeatLabel(String seatLabel) {
+        this.seatLabel = seatLabel;
     }
 
     public SeatStatus getStatus() {
@@ -42,15 +42,15 @@ public class Seat {
         this.status = status;
     }
 
-    public Long getHeld_by(Long i) {
-        return held_by;
+    public Long getHeldBy() {
+        return heldBy;
     }
 
-    public void setHeld_by(Long held_by) {
-        this.held_by = held_by;
+    public void setHeldBy(Long heldBy) {
+        this.heldBy = heldBy;
     }
 
-    public LocalDateTime getHoldExpiresAt(LocalDateTime localDateTime) {
+    public LocalDateTime getHoldExpiresAt() {
         return holdExpiresAt;
     }
 
@@ -62,10 +62,10 @@ public class Seat {
     public String toString() {
         return "Seat{" +
                 "id=" + id +
-                ", event_id=" + event_id +
-                ", seat_label='" + seat_label + '\'' +
+                ", eventId=" + eventId +
+                ", seatLabel='" + seatLabel + '\'' +
                 ", status=" + status +
-                ", held_by=" + held_by +
+                ", heldBy=" + heldBy +
                 ", holdExpiresAt=" + holdExpiresAt +
                 '}';
     }

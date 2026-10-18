@@ -43,7 +43,7 @@ public class EventDAO {
 
 
     public List<Event> findAll() throws SQLException{
-        String sql="SELECT * FROM users";
+        String sql="SELECT * FROM events";
         List<Event> events=new ArrayList<>();
         try(Connection con=DBConnection.getConnection();
             PreparedStatement ps=con.prepareStatement(sql);

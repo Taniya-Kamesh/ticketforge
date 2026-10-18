@@ -12,7 +12,7 @@ public class UserDAO {
     public static final String COLUMNS="id, name, email, password_hash, role, created_at";
 
     public User insert(User user) throws SQLException {
-        String sql="INSERT INTO users(name,email,password_hash,role,created_at) VALUES(?,?,?,?,?)";
+        String sql="INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)";
         try(Connection con= DBConnection.getConnection();
             PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ){
@@ -20,7 +20,6 @@ public class UserDAO {
             ps.setString(2,user.getEmail());
             ps.setString(3,user.getPasswordHash());
             ps.setString(4,user.getRole().name());
-            ps.setTimestamp(5, SQLUtil.toTimeStamp(user.getCreated_at()));
             ps.executeUpdate();
             try(ResultSet keys= ps.getGeneratedKeys())
             {
@@ -32,11 +31,11 @@ public class UserDAO {
     }
 
     public Optional<User> findById(long id) throws SQLException{
-        return findOne("SELECT"+COLUMNS+"FROM users WHERE id=?",id);
+        return findOne("SELECT "+COLUMNS+" FROM users WHERE id=?",id);
     }
 
     public Optional<User> findByEmail(String email) throws SQLException{
-        return findOne("SELECT"+COLUMNS+"FROM users WHERE email=?",email);
+        return findOne("SELECT "+COLUMNS+" FROM users WHERE email=?",email);
     }
 
     public Optional<User> findOne(String sql,Object param) throws SQLException{
