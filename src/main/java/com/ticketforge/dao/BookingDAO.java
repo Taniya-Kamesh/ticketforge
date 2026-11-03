@@ -9,11 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class BookingDAO {
-    public Booking insert(Booking booking) throws SQLException {
+
+    public Booking insert(Booking booking) throws SQLException{
+       try(Connection con = DBConnection.getConnection()){
+           return insert(con,booking);
+       }
+    }
+
+    public Booking insert(Connection con,Booking booking) throws SQLException {
         String sql = "INSERT INTO bookings (user_id, seat_id) VALUES (?, ?)";
 
-        try (Connection con = DBConnection.getConnection();
-             PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             ps.setLong(1, booking.getUserId());
             ps.setLong(2, booking.getSeatId());

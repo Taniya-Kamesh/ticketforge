@@ -13,12 +13,16 @@ public class SeatDAO {
 
     public static final String COLUMNS="id,event_id,seat_label,status,held_by,hold_expires_at";
 
-    public Seat insert(Seat seat) throws SQLException {
+    public Seat insert(Seat seat) throws SQLException{
+        try(Connection con= DBConnection.getConnection()){
+            return insert(con,seat);
+        }
+    }
+
+    public Seat insert(Connection con,Seat seat) throws SQLException {
         String sql="INSERT INTO seats(event_id,seat_label,status,held_by,hold_expires_at) VALUES(?,?,?,?,?)";
 
-        try(Connection con= DBConnection.getConnection();
-            PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-        ){
+        try(PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             ps.setLong(1,seat.getEventId());
             ps.setString(2,seat.getSeatLabel());
             ps.setString(3,seat.getStatus().name());
@@ -75,4 +79,45 @@ public class SeatDAO {
         seat.setHoldExpiresAt(SQLUtil.toLocalDateTime(rs.getTimestamp("hold_expires_at")));
         return seat;
     }
+
+    public boolean tryHold(Connection con,long seatId,long userId,int holdSeconds ) throws SQLException{
+        String sql="UPDATE seats "+
+                  "SET status='HOLD', held_by=?,hold_expires_at=DATE_ADD(NOW(),INTERVAL ? SECOND) "+
+                   "WHERE id=? " +
+                  "AND (status='AVAILABLE' OR (status = 'HOLD' AND hold_expires_at < NOW()))";
+
+        try(PreparedStatement ps=con.prepareStatement(sql)){
+            ps.setLong(1,userId);
+            ps.setInt(2,holdSeconds);
+            ps.setLong(3,seatId);
+
+          return  ps.executeUpdate()==1;
+
+        }
+    }
+    public boolean confirmHold(Connection con,long seatId, long userId) throws SQLException{
+       String sql="UPDATE seats "+
+               "SET status='BOOKED',held_by=NULL,hold_expires_at=NULL "+
+               "WHERE id=?   "+
+               "AND status='HOLD' AND held_by = ? AND hold_expires_at > NOW()";
+
+       try(PreparedStatement ps=con.prepareStatement(sql)){
+           ps.setLong(1,seatId);
+           ps.setLong(2,userId);
+
+           return ps.executeUpdate()==1;
+       }
+
+    }
+
+    public int releaseExpiredHolds(Connection con) throws SQLException {
+        String sql = "UPDATE seats "
+                + "SET status = 'AVAILABLE', held_by = NULL, hold_expires_at = NULL "
+                + "WHERE status = 'HOLD' AND hold_expires_at < NOW()";
+
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
+            return ps.executeUpdate();
+        }
+    }
+
 }

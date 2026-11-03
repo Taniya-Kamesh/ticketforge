@@ -10,10 +10,15 @@ import java.util.List;
 import java.util.Optional;
 
 public class EventDAO {
-    public Event insert(Event event)throws SQLException {
+    public Event insert(Event event) throws SQLException{
+        try(Connection con= DBConnection.getConnection()){
+            return insert(con,event);
+        }
+    }
+    public Event insert(Connection con,Event event)throws SQLException {
         String sql="INSERT INTO events(title,venue,starts_at) VALUES(?,?,?)";
-        try(Connection con= DBConnection.getConnection();
-            PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
+
+        try( PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             ps.setString(1,event.getTitle());
             ps.setString(2,event.getVenue());
             ps.setTimestamp(3, SQLUtil.toTimeStamp(event.getStartsAt()));

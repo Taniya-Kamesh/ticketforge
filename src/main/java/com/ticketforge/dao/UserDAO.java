@@ -12,10 +12,14 @@ public class UserDAO {
     public static final String COLUMNS="id, name, email, password_hash, role, created_at";
 
     public User insert(User user) throws SQLException {
+        try(Connection con= DBConnection.getConnection()){
+            return insert(con,user);
+        }
+    }
+
+    public User insert(Connection con,User user) throws SQLException {
         String sql="INSERT INTO users(name,email,password_hash,role) VALUES(?,?,?,?)";
-        try(Connection con= DBConnection.getConnection();
-            PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
-        ){
+        try(PreparedStatement ps=con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)){
             ps.setString(1,user.getName());
             ps.setString(2,user.getEmail());
             ps.setString(3,user.getPasswordHash());

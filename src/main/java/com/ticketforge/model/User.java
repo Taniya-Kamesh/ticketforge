@@ -9,6 +9,16 @@ public class User {
     private String passwordHash;
     private Role role;
     private LocalDateTime created_at;
+    public User(){
+
+    }
+
+    public User(String name, String email, String passwordHash, Role role) {
+        this.name = name;
+        this.email = email;
+        this.passwordHash = passwordHash;
+        this.role = role;
+    }
 
     public long getId() {
         return id;
