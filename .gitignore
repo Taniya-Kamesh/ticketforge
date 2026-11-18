@@ -7,4 +7,3 @@ src/main/resources/db.properties
 src/test/resources/db.properties
 .env
 .DS_Store
-Thumbs.db
