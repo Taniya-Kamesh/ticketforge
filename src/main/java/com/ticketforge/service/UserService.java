@@ -22,6 +22,7 @@ public class UserService {
         if(email==null||email.trim().isEmpty()) throw new ValidationException("Email is required");
         if(rawPassword==null||rawPassword.trim().isEmpty()) throw new ValidationException(("Password is required"));
         if (rawPassword == null || rawPassword.length() < 8) throw new ValidationException("Password must be at least 8 characters");
+        if (email == null || !email.contains("@")) throw new ValidationException("Invalid email address");
 
         String cleanEmail=email.trim().toLowerCase();
         if(userDAO.findByEmail(cleanEmail).isPresent()){

@@ -12,6 +12,8 @@ import org.junit.jupiter.api.Test;
 
 public class UserServiceTest {
     private final UserService userService = new UserService();
+
+    // Runs before EVERY test method, so each test starts with empty tables
     @BeforeEach
     public void cleanDatabase() throws Exception {
         DbTestHelper.clean();
@@ -97,4 +99,5 @@ public class UserServiceTest {
             Assertions.assertEquals("Invalid email or password", e.getMessage());
         }
     }
+
 }
